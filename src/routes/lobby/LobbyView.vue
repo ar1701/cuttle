@@ -142,19 +142,18 @@ export default {
     },
     rankedIcon(){
       return this.gameStore.isRanked ? 'sword-cross' : 'coffee';
-    }
+    },
+    enterSound() {
+      return this.$refs.enterLobbySound;
+    },
+    leaveSound() {
+      return this.$refs.leaveLobbySound;
+    },
   },
   watch: {
     opponentUsername(newVal) {
-      if (newVal) {
-        if (this.$refs.enterLobbySound.readyState === 4) {
-          this.$refs.enterLobbySound.play();
-        }
-      } else {
-        if (this.$refs.leaveLobbySound.readyState === 4) {
-          this.$refs.leaveLobbySound.play();
-        }
-      }
+      const sound = newVal ? this.enterSound : this.leaveSound;
+      this.playSound(sound);
     },
   },
   methods: {
@@ -177,6 +176,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    playSound(sound) {
+      if (sound.readyState === 4) {
+        sound.play();
+      }
     },
   },
 };
