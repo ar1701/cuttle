@@ -156,6 +156,9 @@ export default {
       this.playSound(sound);
     },
   },
+  mounted() {
+    this.playSound(this.enterSound);
+  },
   methods: {
     async ready() {
       this.readying = true;
