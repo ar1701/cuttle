@@ -16,7 +16,7 @@ describe('Video Playground', () => {
     cy.setupGameAsP0();
   });
 
-  it.only('Draws', () => {
+  it('Draws', () => {
     cy.wait(1000);
 
     cy.get('#deck').click();
