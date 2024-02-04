@@ -16,6 +16,12 @@ describe('Video Playground', () => {
     cy.setupGameAsP0();
   });
 
+  it.only('Draws', () => {
+    cy.wait(1000);
+
+    cy.get('#deck').click();
+  });
+
   it('Plays Points', () => {
     cy.loadGameFixture(0, {
       p0Hand: [Card.ACE_OF_SPADES, Card.SIX_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.SEVEN_OF_DIAMONDS],
