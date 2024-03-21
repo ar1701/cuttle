@@ -80,11 +80,11 @@
         </template>
 
         <!-- Usage stats -->
-        <div v-if="selectedSeason" id="usage-stats-section">
+        <div v-if="showStatsUsageChart" id="usage-stats-section">
           <h2 class="text-h2 mt-8 mb-4">
             {{ t('stats.siteUsage') }}
           </h2>
-          <StatsUsageChart v-if="showStatsUsageChart" :season="selectedSeason" />
+          <StatsUsageChart :season="selectedSeason" />
         </div>
         <!-- Error display -->
         <div v-if="error" class="d-flex flex-column align-center text-center">
