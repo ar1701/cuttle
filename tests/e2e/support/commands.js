@@ -7,6 +7,10 @@ const io = require('sails.io.js')(require('socket.io-client'));
 io.sails.url = 'localhost:1337';
 io.sails.useCORSRouteToGetCookie = false;
 
+function useGameStateAPI() {
+  return Cypress.env('CYPRESS_USE_GAMESTATE_API') === 'true';
+}
+
 // Pass error logs to the terminal console
 // See https://github.com/cypress-io/cypress/issues/3199#issuecomment-1019270203
 // Cypress.Commands.overwrite('log', (subject, message) => cy.task('log', message));
@@ -336,6 +340,11 @@ Cypress.Commands.add('recoverSessionOpponent', (userFixture) => {
 
 Cypress.Commands.add('drawCardOpponent', () => {
   return new Cypress.Promise((resolve, reject) => {
+
+    if (useGameStateAPI()) {
+      reject(new Error('GameState API not yet supported for drawCardOpponent'));
+    }
+
     io.socket.get('/api/game/draw', function handleResponse(res, jwres) {
       if (jwres.statusCode === 200) {
         return resolve();
@@ -349,6 +358,11 @@ Cypress.Commands.add('drawCardOpponent', () => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playPointsOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playPointsOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent points: Invalid card input');
   }
@@ -382,6 +396,11 @@ Cypress.Commands.add('playPointsOpponent', (card) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playPointsSpectator', (card, pNum) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playPointsSpectator');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent points: Invalid card input');
   }
@@ -412,6 +431,11 @@ Cypress.Commands.add('playPointsSpectator', (card, pNum) => {
 });
 
 Cypress.Commands.add('playPointsById', (cardId) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playPointsById');
+  }
+
   return io.socket.get(
     '/api/game/points',
     {
@@ -430,9 +454,15 @@ Cypress.Commands.add('playPointsById', (cardId) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playOneOffSpectator', (card, pNum) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playOneOffSpectator');
+  }
+  
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent one-off as spectator: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -465,9 +495,15 @@ Cypress.Commands.add('playOneOffSpectator', (card, pNum) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playFaceCardOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playFaceCardOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent Face Card: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -499,9 +535,15 @@ Cypress.Commands.add('playFaceCardOpponent', (card) => {
  * @param target {suit: number, rank: number}
  */
 Cypress.Commands.add('playJackOpponent', (card, target) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playJackOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent face card: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -544,9 +586,15 @@ Cypress.Commands.add('playJackOpponent', (card, target) => {
  * @param target {suit: number, rank: number}
  */
 Cypress.Commands.add('scuttleOpponent', (card, target) => {
+  
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for scuttleOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot scuttle as opponent: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -583,9 +631,15 @@ Cypress.Commands.add('scuttleOpponent', (card, target) => {
 });
 
 Cypress.Commands.add('playOneOffOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playOneOffOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot scuttle as opponent: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -625,12 +679,19 @@ Cypress.Commands.add('playOneOffOpponent', (card) => {
  * @param targetType string 'faceCard' | 'point' | 'jack'
  */
 Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playTargetedOneOffOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play targeted one-off as opponent: Invalid card input');
   }
+
   if (!hasValidSuitAndRank(target)) {
     throw new Error('Cannot play targeted one-off as opponent: Invalid target input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -703,9 +764,15 @@ Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) =>
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('counterOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for counterOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play counter as opponent: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -736,9 +803,15 @@ Cypress.Commands.add('counterOpponent', (card) => {
 });
 
 Cypress.Commands.add('resolveFiveOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for resolveFiveOpponent');
+  }
+
   if (card && !hasValidSuitAndRank(card)) {
     throw new Error('Cannot resolve five as opponent: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -766,9 +839,15 @@ Cypress.Commands.add('resolveFiveOpponent', (card) => {
 });
 
 Cypress.Commands.add('resolveThreeOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for resolveThreeOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot resolve three as opponent: Invalid card input');
   }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -798,6 +877,11 @@ Cypress.Commands.add('resolveThreeOpponent', (card) => {
 });
 
 Cypress.Commands.add('resolveOpponent', () => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for resolveOpponent');
+  }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -824,6 +908,11 @@ Cypress.Commands.add('resolveOpponent', () => {
  * @param card2 {suit: number, rank: number} OPTIONAL
  */
 Cypress.Commands.add('discardOpponent', (card1, card2) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for discardOpponent');
+  }
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -860,6 +949,11 @@ Cypress.Commands.add('discardOpponent', (card1, card2) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playPointsFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent points: Invalid card input');
   }
@@ -909,6 +1003,11 @@ Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playFaceCardFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent face card: Invalid card input');
   }
@@ -959,14 +1058,21 @@ Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
  * @param target {suit: number, rank: number}
  */
 Cypress.Commands.add('scuttleFromSevenOpponent', (card, target) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for scuttleFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent points: Invalid card input');
   }
+
   Cypress.log({
     displayName: 'Opponent seven scuttle',
     name: 'Opponent scuttles from seven',
     message: printCard(card),
   });
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -1021,6 +1127,11 @@ Cypress.Commands.add('scuttleFromSevenOpponent', (card, target) => {
  * @param target {suit: number, rank: number
  */
 Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playJackFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent points: Invalid card input');
   }
@@ -1094,14 +1205,21 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playOneOffFromSevenOpponent', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playOneOffFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error('Cannot play opponent one-ff from seven: Invalid card input');
   }
+
   Cypress.log({
     displayName: 'Opponent seven one-off',
     name: 'Opponent plays one-off from seven',
     message: printCard(card),
   });
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -1141,25 +1259,34 @@ Cypress.Commands.add('playOneOffFromSevenOpponent', (card) => {
 });
 
 Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targetType) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playTargetedOneOffFromSevenOpponent');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error(
       `Cannot play targeted one-off from seven for opponent: Invalid card to play: ${JSON.stringify(card)}`,
     );
   }
+
   if (!hasValidSuitAndRank(target)) {
     throw new Error(
       `Cannot play targeted one-off from seven for opponent: Invalid target: ${JSON.stringify(target)}`,
     );
   }
+
   Cypress.log({
     displayName: 'Opponent seven targeted one-off',
     name: 'Opponent plays one-off from seven',
     message: printCard(card),
   });
+
   let foundCard;
   let foundTarget;
   let foundPointCard;
   let index;
+
   return cy
     .window()
     .its('cuttle.gameStore')
@@ -1242,6 +1369,11 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 });
 
 Cypress.Commands.add('passOpponent', () => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for passOpponent');
+  }
+
   cy.log('Opponent Passes');
   io.socket.get('/api/game/pass', function handleResponse(res, jwres) {
     if (jwres.statusCode !== 200) {
@@ -1371,6 +1503,11 @@ Cypress.Commands.add('joinRematchOpponent', ({ oldGameId = null }) => {
  * @param card: {suit: number, rank: number}
  */
 Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for playOneOffAndResolveAsPlayer');
+  }
+
   if (!hasValidSuitAndRank(card)) {
     throw new Error(`Cannot one-off & resolve: Invalid card to play: ${JSON.stringify(card)}`);
   }
@@ -1420,6 +1557,11 @@ Cypress.Commands.add('vueRoute', (route) => {
  * }
  */
 Cypress.Commands.add('loadGameFixture', (pNum, fixture) => {
+
+  if (useGameStateAPI()) {
+    throw new Error('GameState API not yet supported for loadGameFixture');
+  }  
+
   return cy
     .window()
     .its('cuttle.gameStore')
